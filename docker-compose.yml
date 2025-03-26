@@ -1,0 +1,17 @@
+
+services:
+  postgres-db:
+    image: postgres:latest
+    container_name: agsr_db
+    environment:
+      POSTGRES_USER: suneclipse
+      POSTGRES_PASSWORD: suneclipse
+      POSTGRES_DB: agsrtest
+    ports:
+      - "5433:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+
+volumes:
+  pg_data:
