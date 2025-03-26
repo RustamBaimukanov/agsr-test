@@ -1,0 +1,14 @@
+# Default ignored files
+/shelf/
+/modules.xml
+/jarRepositories.xml
+/compiler.xml
+/libraries/
+/workspace.xml
+/encodings.xml
+/sqlDialects.xml
+ # Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
