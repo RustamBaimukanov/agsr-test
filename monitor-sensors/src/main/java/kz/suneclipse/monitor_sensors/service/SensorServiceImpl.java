@@ -2,23 +2,22 @@ package kz.suneclipse.monitor_sensors.service;
 
 import jakarta.transaction.Transactional;
 import kz.suneclipse.monitor_sensors.controller.SensorController;
-import kz.suneclipse.monitor_sensors.controller.dto.CreateSensorRequest;
-import kz.suneclipse.monitor_sensors.controller.dto.SensorResponse;
-import kz.suneclipse.monitor_sensors.controller.dto.UpdateSensorRequest;
+import kz.suneclipse.monitor_sensors.controller.dto.*;
 import kz.suneclipse.monitor_sensors.controller.mapper.SensorMapper;
 import kz.suneclipse.monitor_sensors.exceptions.custom_exception.ObjectNotFound;
 import kz.suneclipse.monitor_sensors.model.Sensor;
+import kz.suneclipse.monitor_sensors.model.Type;
 import kz.suneclipse.monitor_sensors.repository.SensorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
-public class SensorServiceImpl implements SensorService{
+public class SensorServiceImpl implements SensorService {
 
     private final SensorRepository sensorRepository;
 
@@ -49,5 +48,17 @@ public class SensorServiceImpl implements SensorService{
     public void removeSensor(Integer id) {
         sensorRepository.findById(id).orElseThrow(() -> new ObjectNotFound("Датчик не найден."));
         sensorRepository.deleteById(id);
+    }
+
+    @Override
+    public StatsResponse getSensorsCount() {
+
+        return new StatsResponse(
+                sensorRepository.count(),
+                Arrays
+                        .stream(Type.values())
+                        .map(type -> new SensorTypeCount(type, sensorRepository.countByType(type)))
+                        .toList()
+        );
     }
 }

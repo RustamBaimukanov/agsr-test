@@ -1,3 +1,4 @@
+version: '3.8'
 
 services:
   postgres-db:
@@ -17,6 +18,25 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
+  stats-db:
+    image: postgres:latest
+    container_name: stats_agsr_db
+    restart: always
+    environment:
+      POSTGRES_USER: suneclipse
+      POSTGRES_PASSWORD: suneclipse
+      POSTGRES_DB: statstest
+    ports:
+      - "5433:5432"
+    volumes:
+      - pg_data_stats:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U suneclipse -d statstest" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   app:
     build: .
     container_name: agsr_test_app
@@ -31,6 +51,20 @@ services:
       SPRING_DATASOURCE_USERNAME: suneclipse
       SPRING_DATASOURCE_PASSWORD: suneclipse
 
+  stats-app:
+    build: .
+    container_name: stats_test_app
+    restart: always
+    depends_on:
+      stats-db:
+        condition: service_healthy
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://stats-db:5432/statstest
+      SPRING_DATASOURCE_USERNAME: suneclipse
+      SPRING_DATASOURCE_PASSWORD: suneclipse
 
 volumes:
   pg_data:
+  pg_data_stats:
