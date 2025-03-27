@@ -47,7 +47,6 @@ public class Sensor extends BaseEntity{
     private Type type;
 
     @Column(name = "unit")
-    @Enumerated(EnumType.STRING)
     private Unit unit;
 
     @Size(max = 40, message = "Длина местоположения выше допустимых рамок.")

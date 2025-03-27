@@ -1,10 +1,8 @@
 package kz.suneclipse.monitor_sensors.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-@Getter
-@RequiredArgsConstructor
 public enum Unit {
     BAR("bar"),
     VOLTAGE("voltage"),
@@ -12,4 +10,23 @@ public enum Unit {
     PERCENT("%");
 
     private final String unit;
+
+    Unit(String unit) {
+        this.unit = unit;
+    }
+
+    @JsonValue
+    public String getUnit() {
+        return unit;
+    }
+
+    @JsonCreator
+    public static Unit fromValue(String value) {
+        for (Unit unit : values()) {
+            if (unit.unit.equalsIgnoreCase(value.trim())) {
+                return unit;
+            }
+        }
+        throw new IllegalArgumentException("Unknown unit: " + value);
+    }
 }

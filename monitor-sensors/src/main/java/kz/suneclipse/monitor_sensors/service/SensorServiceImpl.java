@@ -5,18 +5,19 @@ import kz.suneclipse.monitor_sensors.controller.SensorController;
 import kz.suneclipse.monitor_sensors.controller.dto.CreateSensorRequest;
 import kz.suneclipse.monitor_sensors.controller.dto.SensorResponse;
 import kz.suneclipse.monitor_sensors.controller.dto.UpdateSensorRequest;
-import kz.suneclipse.monitor_sensors.controller.filter.SensorFilter;
 import kz.suneclipse.monitor_sensors.controller.mapper.SensorMapper;
 import kz.suneclipse.monitor_sensors.exceptions.custom_exception.ObjectNotFound;
 import kz.suneclipse.monitor_sensors.model.Sensor;
 import kz.suneclipse.monitor_sensors.repository.SensorRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SensorServiceImpl implements SensorService{
 
     private final SensorRepository sensorRepository;
@@ -38,8 +39,9 @@ public class SensorServiceImpl implements SensorService{
     }
 
     @Override
-    public List<Sensor> getSensors(SensorFilter filter) {
-        return sensorRepository.findAllByNameLikeIgnoreCaseOrModelLikeIgnoreCaseOrderByUpdatedDate(filter.name(), filter.model());
+    public List<Sensor> getSensors(String filter) {
+        if (filter == null || filter.trim().isEmpty()) return sensorRepository.findAll();
+        return sensorRepository.findAllByNameContainingIgnoreCaseOrModelContainingIgnoreCaseOrderByUpdatedDate(filter, filter);
     }
 
     @Override

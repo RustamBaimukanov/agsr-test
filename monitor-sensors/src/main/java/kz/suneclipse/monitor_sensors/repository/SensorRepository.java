@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface SensorRepository extends JpaRepository<Sensor, Integer> {
 
-    List<Sensor> findAllByNameLikeIgnoreCaseOrModelLikeIgnoreCaseOrderByUpdatedDate(String name, String model);
+    List<Sensor> findAllByNameContainingIgnoreCaseOrModelContainingIgnoreCaseOrderByUpdatedDate(String name, String model);
 }

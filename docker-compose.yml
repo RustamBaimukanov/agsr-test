@@ -3,14 +3,33 @@ services:
   postgres-db:
     image: postgres:latest
     container_name: agsr_db
+    restart: always
     environment:
       POSTGRES_USER: suneclipse
       POSTGRES_PASSWORD: suneclipse
       POSTGRES_DB: agsrtest
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U suneclipse -d agsrtest" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  app:
+    build: .
+    container_name: agsr_test_app
+    restart: always
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/agsrtest
+      SPRING_DATASOURCE_USERNAME: suneclipse
+      SPRING_DATASOURCE_PASSWORD: suneclipse
 
 
 volumes:
