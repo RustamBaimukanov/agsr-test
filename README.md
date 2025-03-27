@@ -1,7 +1,7 @@
-AGSR тестовое
+AGSR тестовое\n
 
-Запуск:
-1)mvn clean package
+Запуск:\n
+1)mvn clean package\n
 2)docker compose up --build
 
 В тестовой 2 in memory юзера
